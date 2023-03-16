@@ -73,7 +73,6 @@ static int int_compare(const void *a, const void *b)
 {
 	int *a_int = (int*)a;
 	int *b_int = (int*)b;
-	printf("%d, %d\n", *a_int, *b_int);
 	return *a_int >= *b_int;
 }
 
@@ -95,20 +94,7 @@ void help_unknown_cmd(const char *cmd)
 	memset(&other_cmds, 0, sizeof(other_cmds));
 	load_cmd_list("git-", &main_cmds, &other_cmds);
 	QSORT(main_cmds.names, main_cmds.cnt, cmdname_compare);
-
-	printf("Before uniq and after sort\n");
-	for(int i = 0; i < main_cmds.cnt; i++){
-		char *name = main_cmds.names[i]->name;
-		printf("%s ", name);
-	}
-	printf("\n");
 	uniq(&main_cmds);
-	printf("After uniq\n");
-	for(int i = 0; i < main_cmds.cnt; i++){
-		char *name = main_cmds.names[i]->name;
-		printf("%s ", name);
-	}
-	printf("\n");
 	/*int nums[6] = {4, 2, 1, 9, 3, 0};*/
 	/*int **b = &nums;*/
 	/*QSORT(b, 6, int_compare);*/
@@ -121,17 +107,10 @@ void help_unknown_cmd(const char *cmd)
 		main_cmds.names[i]->len = levenshtein(cmd, candidate);
 	}
 	QSORT(main_cmds.names, main_cmds.cnt, levenshtein_compare);
-	printf("Sorted based on levenshtein distance\n");
-	for(int i = 0; i < main_cmds.cnt; i++){
-		char *name = main_cmds.names[i]->name;
-		printf("%s ", name);
-	}
-	printf("\n");
 	/* skip and count prefix matches */
 	/* len = 0 when input cmd matches candidate cmd */
 	for (n = 0; n < main_cmds.cnt && !main_cmds.names[n]->len; n++)
 		;
-	printf("n = %d\n", n);
 
 	/* count all the most similar ones */
 	for (best_similarity = main_cmds.names[n++]->len; (n < main_cmds.cnt && best_similarity == main_cmds.names[n]->len); n++)
@@ -156,8 +135,6 @@ void help_unknown_cmd(const char *cmd)
 void load_cmd_list(const char *prefix, struct cmdnames *main_cmds, struct cmdnames *other_cmds){
 	const char *envPath = getenv("PATH");
 	const char *exec_path = git_exec_path();
-	printf("PATH : %s\n ", envPath);
-	printf("EXEC PATH : %s\n", exec_path);
 	load_builtin_commands(prefix, main_cmds);
 	// other_cmds are loaded from envPaths, skipping this..
 	exclude_cmds(other_cmds, main_cmds);
@@ -167,14 +144,12 @@ void load_builtin_commands(const char *prefix, struct cmdnames *main_cmds){
 	const char *name;
 	int i;
 
-	printf("Before skipping, prefix is %s\n", prefix);
 	/* Prefix must start with git- else report bug */
 	if(!skip_prefix(prefix, "git-", &prefix)){
 		printf("Prefix %s must start with 'git-'", prefix);
 		exit(0);
 	}
 
-	printf("After skipping, prefix is %s\n", prefix);
 	for(i = 0; i < ARRAY_SIZE(commands); i++){
 		if(skip_prefix(commands[i].cmd, prefix, &name)){
 			add_cmdname(main_cmds, name, strlen(name));
@@ -195,11 +170,9 @@ int skip_prefix(const char *str, const char *prefix, const char **out){
 }
 
 void add_cmdname(struct cmdnames *main_cmds, const char *name, int len){
-	printf("command name is %s and len is %d \n", name, len);
 	struct cmdname *ent;
 	FLEX_ALLOC_MEM(ent, name, name, len);
 	ent->len = len;
-	printf("Main_cmds count: %d and alloc: %d \n", main_cmds->cnt, main_cmds->alloc);
 
 	// Alloc grow on main_cmds
 	ALLOC_GROW(main_cmds->names, main_cmds->cnt + 1, main_cmds->alloc);

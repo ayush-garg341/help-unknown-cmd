@@ -84,7 +84,6 @@ static inline size_t st_mult(size_t a, size_t b) {
 #define alloc_nr(x) (((x)+16)*3/2)
 
 #define ALLOC_GROW(x, nr, alloc)\
-	printf("%d, %d\n", nr, alloc); \
 	do { \
 		if ((nr) > alloc){\
 			if(alloc_nr(alloc) < (nr)) \

@@ -42,7 +42,6 @@ void msort_with_tmp(void *b, size_t n, size_t s,
 
 void git_stable_qsort(void *b, size_t n, size_t s, int* cmp(const void *, const void *))
 {
-	printf("n = %d, size = %d\n", n, s);
 	const size_t size = st_mult(n, s);
 	char *tmp;
 	tmp = malloc(size);
