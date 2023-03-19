@@ -6,3 +6,5 @@
     - cd help-unknown-cmd
     - Compile it with gcc -o help.out help_unknown_cmd/help.c help_unknown_cmd/exec-cmd.c help_unknown_cmd/stable-qsort.c
     - ./help.out git_command
+        - example: ./help.out sta
+                    ./help.out sttus
