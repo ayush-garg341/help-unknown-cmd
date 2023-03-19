@@ -49,19 +49,6 @@ static struct cmdstruct commands[] = {
 	{ "status", RUN_SETUP | NEED_WORK_TREE }
 };
 
-int main(int argc, char *argv[])
-{
-	if(argc != 2){
-		fprintf(stderr, "Wrong number of arguments passed \n");
-		exit(0);
-	}
-	const char *input_cmd = argv[1];
-	printf("Input git command is : %s \n", input_cmd);
-	
-  help_unknown_cmd(input_cmd);
-	return 0;
-}
-
 static int cmdname_compare(const void *a_, const void *b_)
 {
 	struct cmdname *a = *(struct cmdname **)a_;
@@ -84,6 +71,19 @@ static int levenshtein_compare(const void *a_, const void *b_)
 	int l1 = a->len;
 	int l2 = b->len;
 	return l1 != l2 ? l1 - l2 : strcmp(a->name, b->name);
+}
+
+int main(int argc, char *argv[])
+{
+	if(argc != 2){
+		fprintf(stderr, "Wrong number of arguments passed \n");
+		exit(0);
+	}
+	const char *input_cmd = argv[1];
+	printf("Input git command is : %s \n", input_cmd);
+	
+  help_unknown_cmd(input_cmd);
+	return 0;
 }
 
 void help_unknown_cmd(const char *cmd)
