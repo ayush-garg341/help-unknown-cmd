@@ -95,12 +95,6 @@ void help_unknown_cmd(const char *cmd)
 	load_cmd_list("git-", &main_cmds, &other_cmds);
 	QSORT(main_cmds.names, main_cmds.cnt, cmdname_compare);
 	uniq(&main_cmds);
-	/*int nums[6] = {4, 2, 1, 9, 3, 0};*/
-	/*int **b = &nums;*/
-	/*QSORT(b, 6, int_compare);*/
-	/*for(int i = 0; i < 6; i++){*/
-		/*printf("%d ", nums[i]);*/
-	/*}*/
 
 	for (i = 0, n = 0; i < main_cmds.cnt; i++){
 		const char *candidate = main_cmds.names[i]->name;
