@@ -56,13 +56,6 @@ static int cmdname_compare(const void *a_, const void *b_)
 	return strcmp(a->name, b->name);
 }
 
-static int int_compare(const void *a, const void *b)
-{
-	int *a_int = (int*)a;
-	int *b_int = (int*)b;
-	return *a_int >= *b_int;
-}
-
 static int levenshtein_compare(const void *a_, const void *b_)
 {
 	struct cmdname *a = *(struct cmdname **)a_;

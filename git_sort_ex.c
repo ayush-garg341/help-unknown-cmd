@@ -35,7 +35,7 @@ void git_stable_qsort(void *base, size_t nmemb, size_t size, int *compare(const 
 
 void load_cmd_list(struct cmdnames *main_cmds);
 
-const char *git_commands[12] = {
+const char *git_commands[13] = {
     "add",
     "push",
     "merge",
@@ -46,6 +46,7 @@ const char *git_commands[12] = {
     "rebase",
     "fetch",
     "commit",
+    "add",
     "stash",
     "remote"
 };
@@ -55,13 +56,13 @@ int main(int argc, char *argv[])
     struct cmdnames main_cmds;
 	  memset(&main_cmds, 0, sizeof(main_cmds));
     load_cmd_list(&main_cmds);
-    printf("Before sorting\n");
+    printf("===============Before sorting==============\n");
     for(int i = 0; i < main_cmds.cnt; i++){
         printf("%s ", main_cmds.names[i]->name);
     }
     printf("\n");
-	  QSORT(main_cmds.names, main_cmds.cnt, cmdname_compare);
-    printf("After sorting\n");
+    QSORT(main_cmds.names, main_cmds.cnt, cmdname_compare);
+    printf("==============After sorting================\n");
     for(int i = 0; i < main_cmds.cnt; i++){
         printf("%s ", main_cmds.names[i]->name);
     }
@@ -70,7 +71,7 @@ int main(int argc, char *argv[])
 
 void load_cmd_list(struct cmdnames *main_cmds){
     ALLOC_GROW(main_cmds->names, 20);
-    for(int i = 0; i < 12; i++){
+    for(int i = 0; i < 13; i++){
         const char *name = git_commands[i];
         size_t len = strlen(name);
         struct cmdname *ent;
@@ -116,8 +117,12 @@ void msort_with_tmp(void *b, size_t n, size_t s,
 		}
 	}
 	if(n1 > 0)
-		memcpy(tmp, b1, n1 * s);
-	memcpy(b, t, (n-n2)*s);
+		memcpy(tmp, b1, n1 * s); // if after comparing two sorted sub arrays, we are left with elements in left sub-arrays, just copy those.
+  if(n2 > 0)
+    memcpy(tmp, b2, n2*s);
+	memcpy(b, t, (n1+n2)*s); // if after comparing two sorted sub arrays, we are left with elements in right sub-arrays, just copy those.
+
+  // But it will never happen that at the end elements are present in both sub-arrays.
 }
 
 void git_stable_qsort(void *b, size_t n, size_t s, int* cmp(const void *, const void *))
