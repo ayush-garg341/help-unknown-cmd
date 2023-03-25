@@ -19,6 +19,13 @@ static int cmdname_compare(const void *a_, const void *b_)
 	return strcmp(a->name, b->name);
 }
 
+static int int_compare(const void *a_, const void *b_)
+{
+    int *a = (int *)a_;
+    int *b = (int *)b_;
+    return *a >= *b;
+}
+
 static void sane_qsort(void *base, size_t nmemb, size_t size,
 									int *compare(const void *, const void *))
 {
@@ -65,6 +72,15 @@ int main(int argc, char *argv[])
     printf("==============After sorting================\n");
     for(int i = 0; i < main_cmds.cnt; i++){
         printf("%s ", main_cmds.names[i]->name);
+    }
+    printf("\n");
+
+    int nums[] = {10, 90, 12, 15, 11, 3};
+    printf("==========Integer sorting=============\n");
+    QSORT(nums, 6, int_compare);
+
+    for(int i = 0; i < 6; i++){
+        printf("%d ", nums[i]);
     }
     printf("\n");
 };
